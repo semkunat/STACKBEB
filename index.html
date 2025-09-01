@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            text-align: center;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #000000;
+            margin: 15px auto;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .header {
+            background-color: #ffffff00;
+            padding: 10px;
+            margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .slider {
+            display: flex;
+            width: 400%;
+            animation: slide 12s infinite;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide {
+            width: 25%;
+            box-sizing: border-box;
+        }
+        .slide img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        @keyframes slide {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(0); }
+            30% { transform: translateX(-25%); }
+            50% { transform: translateX(-25%); }
+            55% { transform: translateX(-50%); }
+            75% { transform: translateX(-50%); }
+            80% { transform: translateX(-75%); }
+            100% { transform: translateX(-75%); }
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 90%;
+            margin: 0 auto 20px;
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+        .item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        .item img {
+            width: 100px;
+            height: auto;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        .item p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .quantity-input {
+            width: 60px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+        .quantity-input:focus {
+            border-color: #000000;
+            outline: none;
+        }
+        .total {
+            padding: 20px;
+            background: linear-gradient(to bottom, rgba(245, 247, 250, 0), #f5f7fa);
+            border-top: 1px solid #e0e0e0;
+        }
+        .total p {
+            margin: 5px 0;
+            font-size: 16px;
+        }
+        .order-button {
+            background-color: #318545;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .order-button:hover {
+            background-color: #0ad045;
+            transform: scale(1.05);
+        }
+        #nextPage {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+            width: 90%;
+        }
+        #orderDetails {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+        #addressInput, #phoneInput {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        #addressInput:focus, #phoneInput:focus {
+            border-color: #037f3f;
+            outline: none;
+        }
+        .back-button {
+            background-color: #6b7280;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #4b5563;
+            transform: scale(1.05);
+        }
+    </style>
+    <script>
+        function updateTotal() {
+            let totalItems = 0;
+            let totalPrice = 0;
+            const quantities = document.getElementsByClassName('quantity-input');
+            for (let qty of quantities) {
+                totalItems += parseInt(qty.value) || 0;
+                totalPrice += (parseInt(qty.value) || 0) * 7000;
+            }
+            document.getElementById('total-items').textContent = totalItems;
+            document.getElementById('total-price').textContent = totalPrice + ' IDR';
+            updateOrderDetails();
+        }
+
+        function updateOrderDetails() {
+            const quantities = document.getElementsByClassName('quantity-input');
+            const items = ['Stackvoigt', 'Melon', 'Strawberry', 'Coffee', 'Coklat', 'Piscok'];
+            let details = '';
+            let totalOrderPrice = 0;
+            for (let i = 0; i < quantities.length; i++) {
+                const qty = parseInt(quantities[i].value) || 0;
+                if (qty > 0) {
+                    const itemTotal = qty * 7000;
+                    details += `${items[i]}: ${qty} x 7000 = ${itemTotal} IDR<br>`;
+                    totalOrderPrice += itemTotal;
+                }
+            }
+            document.getElementById('orderDetails').innerHTML = details || 'Tidak ada item yang dipilih.';
+            document.getElementById('totalOrderPrice').textContent = `Total Harga: ${totalOrderPrice} IDR`;
+        }
+
+        function showNextPage(event) {
+            event.preventDefault();
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('nextPage').style.display = 'flex';
+            updateOrderDetails();
+        }
+
+        function goBack() {
+            document.getElementById('nextPage').style.display = 'none';
+            document.getElementById('landingPage').style.display = 'flex';
+        }
+
+        // Add a subtle hover effect to menu items
+        document.querySelectorAll('.item').forEach(item => {
+            item.addEventListener('mouseover', () => {
+                item.style.backgroundColor = '#f0f0f0';
+            });
+            item.addEventListener('mouseout', () => {
+                item.style.backgroundColor = '#fff';
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="landingPage">
+        <div class="logo">
+            STACKBEBSTORE
+        </div>
+        <div class="header">
+            <div class="slider">
+                <div class="slide"><img src="banner1.jpg" alt="Banner 1"></div>
+                <div class="slide"><img src="banner2.jpg" alt="Banner 2"></div>
+                <div class="slide"><img src="banner3.jpg" alt="Banner 3"></div>
+                <div class="slide"><img src="banner4.jpg" alt="Banner 4"></div>
+            </div>
+        </div>
+        <h2>MENU</h2>
+        <div class="menu">
+            <div class="item">
+                <img src="produk1.png" alt="Stackvoigt">
+                <p>Stackvoigt</p>
+                <p>Harga: 7000 IDR</p>
+                <input type="number" class="quantity-input" value="3" min="0" onchange="updateTotal()">
+            </div>
+            <div class="item">
+                <img src="produk2.png" alt="Melon">
+                <p>Melon</p>
+                <p>Harga: 7000 IDR</p>
+                <input type="number" class="quantity-input" value="1" min="0" onchange="updateTotal()">
+            </div>
+            <div class="item">
+                <img src="produk3.png" alt="Strawberry">
+                <p>Strawberry</p>
+                <p>Harga: 7000 IDR</p>
+                <input type="number" class="quantity-input" value="5" min="0" onchange="updateTotal()">
+            </div>
+            <div class="item">
+                <img src="produk4.png" alt="Coffee">
+                <p>Coffee</p>
+                <p>Harga: 7000 IDR</p>
+                <input type="number" class="quantity-input" value="2" min="0" onchange="updateTotal()">
+            </div>
+            <div class="item">
+                <img src="produk5.png" alt="Coklat">
+                <p>Coklat</p>
+                <p>Harga: 7000 IDR</p>
+                <input type="number" class="quantity-input" value="0" min="0" onchange="updateTotal()">
+            </div>
+            <div class="item">
+                <img src="produk6.png" alt="Piscok">
+                <p>Piscok</p>
+                <p>Harga: 7000 IDR</p>
+                <input type="number" class="quantity-input" value="4" min="0" onchange="updateTotal()">
+            </div>
+        </div>
+        <div class="total">
+            <p>TOTAL</p>
+            <p id="total-items">15</p>
+            <p>TOTAL HARGA</p>
+            <p id="total-price">105000 IDR</p>
+            <a href="#" class="order-button" onclick="showNextPage(event)">TOMBOL ORDER KE WHATSAPP</a>
+        </div>
+    </div>
+    <div id="nextPage">
+        <h2>Detail Pesanan</h2>
+        <div id="orderDetails"></div>
+        <p id="totalOrderPrice"></p>
+        <input type="text" id="addressInput" placeholder="Masukkan alamat tujuan" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+        <input type="text" id="phoneInput" placeholder="Masukkan nomor telepon" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+        <a href="https://whatsapp.com" class="order-button">Kirim Pesanan</a>
+        <a href="#" class="back-button" onclick="goBack()">Kembali</a>
+    </div>
+</body>
+</html>
